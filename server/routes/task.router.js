@@ -28,4 +28,17 @@ router.post('/', (req, res) => {
       });
 });
 
+router.delete('/:id', (req, res) => {
+   let taskID = req.params.id;
+   let sqlText = `DELETE FROM "toDoTable" WHERE "id" = $1;`;
+
+   pool.query(sqlText, [taskID])
+      .then(() => {
+         res.sendStatus(201);
+      }).catch((error) => {
+         console.log('Error removing task from table', error);
+         res.sendStatus(500);
+      });
+});
+
 module.exports = router;
