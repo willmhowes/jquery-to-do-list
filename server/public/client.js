@@ -91,8 +91,12 @@ function renderAllTasks() {
                <tr>
                   <td>${task.task}</td>
                   <td>${status}</td>
-                  <td><button class="btn-update-status">Set Complete</button></td>
-                  <td><button class="btn-delete-row">Delete</button></td>
+                  <td>
+                     <button type="button" class="btn-update-status btn btn-primary btn-sm">Complete</button>
+                  </td>
+                  <td>
+                     <button type="button" class="btn-delete-row btn btn-danger btn-sm">Delete</button>
+                  </td>
                </tr>
             `);
 
@@ -107,11 +111,13 @@ function renderAllTasks() {
 
          if (status == 'complete') {
             $tr = $(`
-               <tr>
+               <tr class="incomplete">
                   <td>${task.task}</td>
                   <td>${status}</td>
                   <td></td>
-                  <td><button class="btn-delete-row">Delete</button></td>
+                  <td>
+                     <button type="button" class="btn-delete-row btn btn-danger btn-sm">Delete</button>
+                  </td>
                </tr>
             `);
 
