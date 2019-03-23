@@ -4,7 +4,7 @@ const pool = require('./pool');
 
 // Retrieve table data from database and send to client
 router.get('/', (req, res) => {
-   pool.query(`SELECT * FROM "toDoTable"`)
+   pool.query(`SELECT * FROM "toDoTable" ORDER BY "is_complete" ASC`)
       .then((response) => {
          res.send(response.rows);
       }).catch((error) => {

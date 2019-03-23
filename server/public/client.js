@@ -58,14 +58,15 @@ function updateTaskStatus() {
 function deleteTask() {
    let rowToDelete = $(this).closest('tr');
    let taskID = rowToDelete.data('id');
+   console.log(taskID);
 
    $.ajax({
       type: 'DELETE',
       url: `/tasks/${taskID}`,
-   }).then (function(response) {
+   }).then(function (response) {
       console.log('Success: task was deleted');
       renderAllTasks();
-   }).catch(function(error) {
+   }).catch(function (error) {
       console.log('Failed to delete task:', error);
       alert(`Error: could not delete task`);
    });
@@ -79,21 +80,44 @@ function renderAllTasks() {
    }).then(function (response) {
       $('#table-body').empty();
       let status = null;
+      let $tr = null;
 
+      // renders all incomplete tasks together
       for (let task of response) {
          status = isTaskComplete(task.is_complete);
 
-         let $tr =$(`
-            <tr>
-               <td>${task.task}</td>
-               <td>${status}</td>
-               <td><button class="btn-update-status">Set Complete</button></td>
-               <td><button class="btn-delete-row">Delete</button></td>
-            </tr>
-         `);
+         if (status == 'incomplete') {
+            $tr = $(`
+               <tr>
+                  <td>${task.task}</td>
+                  <td>${status}</td>
+                  <td><button class="btn-update-status">Set Complete</button></td>
+                  <td><button class="btn-delete-row">Delete</button></td>
+               </tr>
+            `);
 
-         $tr.data(task);
-         $('#table-body').append($tr);
+            $tr.data(task);
+            $('#table-body').append($tr);
+         }
+      }
+
+      // renders all complete tasks together
+      for (let task of response) {
+         status = isTaskComplete(task.is_complete);
+
+         if (status == 'complete') {
+            $tr = $(`
+               <tr>
+                  <td>${task.task}</td>
+                  <td>${status}</td>
+                  <td></td>
+                  <td><button class="btn-delete-row">Delete</button></td>
+               </tr>
+            `);
+
+            $tr.data(task);
+            $('#table-body').append($tr);
+         }
       }
    }).catch(function (error) {
       console.log('Failed to retrieve tasks:', error);
