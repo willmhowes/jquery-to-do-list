@@ -41,4 +41,17 @@ router.delete('/:id', (req, res) => {
       });
 });
 
+router.put('/update/:id', (req, res) => {
+   let taskID = req.params.id;
+   let sqlText = `UPDATE "toDoTable" SET "is_complete" = 'true' WHERE "id" = $1;`;
+
+   pool.query(sqlText, [taskID])
+      .then(() => {
+         res.sendStatus(201);
+      }).catch((error) => {
+         console.log('Error updating task status in table', error);
+         res.sendStatus(500);
+      });
+});
+
 module.exports = router;

@@ -8,10 +8,11 @@ function onReady() {
    renderAllTasks();
 
    $('#btn-add-task').on('click', addNewTask);
-   $('#table-body').on('click', '.btn-change-status', changeTaskStatus);
+   $('#table-body').on('click', '.btn-update-status', updateTaskStatus);
    $('#table-body').on('click', '.btn-delete-row', deleteTask);
 }
 
+// adds a new task to the server
 function addNewTask(event) {
    event.preventDefault();
 
@@ -19,6 +20,9 @@ function addNewTask(event) {
       task: $('#in-task').val(),
       is_complete: false, // assume task is not yet complete
    }
+
+   // Clears the input field
+   $('#in-task').val('');
 
    $.ajax({
       type: 'POST',
@@ -33,18 +37,31 @@ function addNewTask(event) {
 }
 
 // TODO: write function to update a task's status
-function changeTaskStatus() {
+function updateTaskStatus() {
+   let rowToUpdate = $(this).closest('tr');
+   let taskID = rowToUpdate.data('id');
+   console.log('Row ID:', taskID);
 
+   $.ajax({
+      type: 'PUT',
+      url: `/tasks/update/${taskID}`
+   }).then(function (response) {
+      console.log('Success: task was updated');
+      renderAllTasks();
+   }).catch(function (error) {
+      console.log('Failed to update task:', error);
+      alert(`Error: could not update task`);
+   });
 }
 
-// deletes a task from the database and then renders the new DOM
+// deletes a task from the database
 function deleteTask() {
    let rowToDelete = $(this).closest('tr');
-   let taskId = rowToDelete.data('id');
+   let taskID = rowToDelete.data('id');
 
    $.ajax({
       type: 'DELETE',
-      url: `/tasks/${taskId}`,
+      url: `/tasks/${taskID}`,
    }).then (function(response) {
       console.log('Success: task was deleted');
       renderAllTasks();
@@ -70,7 +87,7 @@ function renderAllTasks() {
             <tr>
                <td>${task.task}</td>
                <td>${status}</td>
-               <td><button class="btn-change-status">Make Complete</button></td>
+               <td><button class="btn-update-status">Set Complete</button></td>
                <td><button class="btn-delete-row">Delete</button></td>
             </tr>
          `);
