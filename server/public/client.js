@@ -9,7 +9,7 @@ function onReady() {
 
    $('#btn-add-task').on('click', addNewTask);
    $('#table-body').on('click', '.btn-update-status', updateTaskStatus);
-   $('#table-body').on('click', '.btn-delete-row', deleteTask);
+   $('#table-body').on('click', '.btn-delete-row', verifyDeletion);
 }
 
 // adds a new task to the server
@@ -55,10 +55,7 @@ function updateTaskStatus() {
 }
 
 // deletes a task from the database
-function deleteTask() {
-   let rowToDelete = $(this).closest('tr');
-   let taskID = rowToDelete.data('id');
-   console.log(taskID);
+function deleteTask(taskID) {
 
    $.ajax({
       type: 'DELETE',
@@ -138,4 +135,22 @@ function isTaskComplete(taskStatus) {
    } else if (taskStatus === false) {
       return 'incomplete';
    }
+}
+
+function verifyDeletion() {
+   let rowToDelete = $(this).closest('tr');
+   let taskID = rowToDelete.data('id');
+   console.log(taskID);
+
+   swal({
+      title: "Delete this task?",
+      text: "This task will be forever removed from everywhere but your mind*\n\n*Our patent-pending ReMind™ technology will begin resolving this issue starting Summer 2020",
+      buttons: ["Nevermind", "I'm ready to let go"],
+      dangerMode: true,
+   })
+      .then(function (value) {
+         if (value === true) {
+            deleteTask(taskID);
+         }
+      })
 }
