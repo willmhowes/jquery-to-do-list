@@ -108,7 +108,7 @@ function renderAllTasks() {
 
          if (status == 'complete') {
             $tr = $(`
-               <tr class="incomplete">
+               <tr class="complete">
                   <td>${task.task}</td>
                   <td>${status}</td>
                   <td></td>
